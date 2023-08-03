@@ -15,7 +15,7 @@ from magic_rs import from_path, from_bytes
     ],
 )
 def test_is_video_from_bytes(mime_type, extension, file_name):
-    with open(f"../testdata/{file_name}", "rb") as f:
+    with open(f"testdata/{file_name}", "rb") as f:
         py_magic = from_bytes(f.read())
         assert py_magic.mime_type() == mime_type
         assert py_magic.extension() == extension
@@ -43,7 +43,7 @@ def test_is_video_from_bytes(mime_type, extension, file_name):
     ],
 )
 def test_is_video_from_path(file_name, mime_type, extension):
-    py_magic = from_path(f"../testdata/{file_name}")
+    py_magic = from_path(f"testdata/{file_name}")
     assert py_magic.mime_type() == mime_type
     assert py_magic.extension() == extension
     assert py_magic.is_app() is False
