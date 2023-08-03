@@ -1,0 +1,49 @@
+[package]
+name = "magic-rs"
+version = "0.1.0"
+description = "Use rust infer crate to rewrite python-magic library"
+authors = [
+    "vvanglro <vvanglro@gmail.com>"
+]
+license = "MIT"
+edition = "2021"
+keywords = ["filetype", "mime", "libmagic"]
+
+readme = "README.md"
+homepage = "https://github.com/rp-libs/magic-rs"
+repository = "https://github.com/rp-libs/magic-rs"
+
+include = [
+    "/Cargo.toml",
+    "/pyproject.toml",
+    "/LICENSE",
+    "/README.md",
+    "/src",
+    "/magic_rs",
+    "/tests",
+    "/.cargo",
+    "!__pycache__",
+    "!tests/.pytest_cache",
+    "!*.so",
+    "!testdata",
+]
+
+[lib]
+name = "_magic_rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+infer = "0.15.0"
+pyo3 = { version = "0.19.2", features = ["extension-module"] }
+
+[build-dependencies]
+pyo3-build-config = { version = "0.19.2", features = ["resolve-config"] }
+
+[profile.release]
+codegen-units = 1
+debug = false
+incremental = false
+lto = "fat"
+opt-level = 3
+panic = "abort"
+strip = true

@@ -1,0 +1,50 @@
+[project]
+name = "magic-rs"
+authors = [
+    {name = "vvanglro", email = "vvanglro@gmail.com"}
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+dynamic = [
+    "description",
+    "keywords",
+    "license",
+    "readme",
+    "version"
+]
+
+[project.urls]
+Homepage = "https://github.com/rp-libs/magic-rs"
+Funding = "https://github.com/rp-libs/magic-rs"
+Source = "https://github.com/rp-libs/magic-rs"
+
+[project.optional-dependencies]
+test = [
+    "pytest~=7.1.2"
+]
+
+[tool.maturin]
+python-source = "python"
+features = ["pyo3/extension-module"]
+module-name = "magic_rs._magic_rs"
+
+[build-system]
+requires = ["maturin>=1.1,<2.0"]
+build-backend = "maturin"
