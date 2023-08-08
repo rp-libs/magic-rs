@@ -3,7 +3,7 @@
 [![Package version](https://img.shields.io/pypi/v/magic-rs?color=%2334D058&label=pypi%20package)](https://pypi.org/project/magic-rs/)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/magic-rs.svg?color=%2334D058)](https://pypi.org/project/magic-rs/)
 
-Use rust [infer](https://github.com/bojand/infer) crate to rewrite python-magic library
+Python wrapper for Rust [infer](https://github.com/bojand/infer) crate
 
 ---
 
