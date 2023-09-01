@@ -1,9 +1,9 @@
-use std::path::Path;
-use pyo3::prelude::*;
-use infer::{get, Type, MatcherType, get_from_path};
+use infer::{get, get_from_path, MatcherType, Type};
 use pyo3::create_exception;
 use pyo3::exceptions::PyValueError;
-use pyo3::types::{PyString, PyBytes};
+use pyo3::prelude::*;
+use pyo3::types::{PyBytes, PyString};
+use std::path::Path;
 
 create_exception!(_magic_rs, CantMatchTypeError, PyValueError, "Cant match type error");
 
@@ -54,7 +54,6 @@ impl PyMagic {
         Ok(self.infer_type.matcher_type() == MatcherType::Text)
     }
 }
-
 
 #[pyfunction]
 #[pyo3(signature = (buf))]
