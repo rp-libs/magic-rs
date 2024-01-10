@@ -1,6 +1,6 @@
 [package]
 name = "magic-rs"
-version = "0.1.0"
+version = "0.2.0"
 description = "Use rust infer crate to rewrite python-magic library"
 authors = [
     "vvanglro <vvanglro@gmail.com>"
@@ -22,6 +22,7 @@ include = [
     "/python/magic_rs",
     "/tests",
     "/.cargo",
+    "/build.rs",
     "!__pycache__",
     "!tests/.pytest_cache",
     "!tests/.benchmarks",
@@ -36,10 +37,10 @@ crate-type = ["cdylib"]
 
 [dependencies]
 infer = "0.15.0"
-pyo3 = { version = "0.19.2", features = ["extension-module"] }
+pyo3 = { version = "=0.20.1", features = ["extension-module", "generate-import-lib"] }
 
 [build-dependencies]
-pyo3-build-config = { version = "0.19.2", features = ["resolve-config"] }
+pyo3-build-config = { version = "=0.20.1", features = ["resolve-config"] }
 
 [profile.release]
 codegen-units = 1
