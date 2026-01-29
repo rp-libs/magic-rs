@@ -3,7 +3,7 @@ use pyo3::create_exception;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
-use std::path::Path;
+
 
 create_exception!(_magic_rs, CantMatchTypeError, PyValueError, "Cant match type error");
 
@@ -57,9 +57,9 @@ impl PyMagic {
 
 #[pyfunction]
 #[pyo3(signature = (buf))]
-fn from_bytes(_py: Python, buf: Py<PyBytes>) -> PyResult<PyMagic> {
-    let buf = buf.as_bytes(_py);
-    match _py.detach(|| get(buf)) {
+fn from_bytes(py: Python, buf: Py<PyBytes>) -> PyResult<PyMagic> {
+    let bytes = buf.as_bytes(py).to_vec();
+    match py.detach(move || get(&bytes)) {
         None => Err(CantMatchTypeError::new_err("Cant match type error")),
         Some(resp) => Ok(PyMagic::new(resp)),
     }
@@ -68,11 +68,11 @@ fn from_bytes(_py: Python, buf: Py<PyBytes>) -> PyResult<PyMagic> {
 #[pyfunction]
 #[pyo3(signature = (path))]
 fn from_path(_py: Python, path: &str) -> PyResult<Option<PyMagic>> {
-    let path = Path::new(path);
-    match _py.detach(|| get_from_path(path)) {
+    let path_buf = std::path::PathBuf::from(path);
+    match _py.detach(move || get_from_path(path_buf)) {
         Ok(None) => Err(CantMatchTypeError::new_err("Cant match type or path error")),
         Ok(Some(resp)) => Ok(Option::from(PyMagic::new(resp))),
-        _ => Err(CantMatchTypeError::new_err("Cant match type or path error")),
+        Err(_) => Err(CantMatchTypeError::new_err("Cant match type or path error")),
     }
 }
 
