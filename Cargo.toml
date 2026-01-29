@@ -1,6 +1,6 @@
 [package]
 name = "magic-rs"
-version = "0.2.0"
+version = "0.3.0"
 description = "Use rust infer crate to rewrite python-magic library"
 authors = [
     "vvanglro <vvanglro@gmail.com>"
