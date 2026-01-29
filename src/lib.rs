@@ -4,7 +4,6 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
 
-
 create_exception!(_magic_rs, CantMatchTypeError, PyValueError, "Cant match type error");
 
 #[pyclass]
