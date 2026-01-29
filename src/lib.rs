@@ -2,8 +2,7 @@ use infer::{get, get_from_path, MatcherType, Type};
 use pyo3::create_exception;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyString};
-use std::path::Path;
+use pyo3::types::PyBytes;
 
 create_exception!(_magic_rs, CantMatchTypeError, PyValueError, "Cant match type error");
 
@@ -57,9 +56,9 @@ impl PyMagic {
 
 #[pyfunction]
 #[pyo3(signature = (buf))]
-fn from_bytes(_py: Python, buf: &PyBytes) -> PyResult<PyMagic> {
-    let buf = buf.as_bytes();
-    match _py.allow_threads(|| get(buf)) {
+fn from_bytes(py: Python, buf: Py<PyBytes>) -> PyResult<PyMagic> {
+    let bytes = buf.as_bytes(py).to_vec();
+    match py.detach(move || get(&bytes)) {
         None => Err(CantMatchTypeError::new_err("Cant match type error")),
         Some(resp) => Ok(PyMagic::new(resp)),
     }
@@ -67,25 +66,24 @@ fn from_bytes(_py: Python, buf: &PyBytes) -> PyResult<PyMagic> {
 
 #[pyfunction]
 #[pyo3(signature = (path))]
-fn from_path(_py: Python, path: &PyString) -> PyResult<Option<PyMagic>> {
-    let path_str = path.to_str().unwrap();
-    let path = Path::new(path_str);
-    match _py.allow_threads(|| get_from_path(path)) {
+fn from_path(_py: Python, path: &str) -> PyResult<Option<PyMagic>> {
+    let path_buf = std::path::PathBuf::from(path);
+    match _py.detach(move || get_from_path(path_buf)) {
         Ok(None) => Err(CantMatchTypeError::new_err("Cant match type or path error")),
         Ok(Some(resp)) => Ok(Option::from(PyMagic::new(resp))),
-        _ => Err(CantMatchTypeError::new_err("Cant match type or path error")),
+        Err(_) => Err(CantMatchTypeError::new_err("Cant match type or path error")),
     }
 }
 
 #[pymodule]
-fn _magic_rs(_py: Python, module: &PyModule) -> PyResult<()> {
+fn _magic_rs(_py: Python, module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<PyMagic>()?;
     module.add_function(wrap_pyfunction!(from_bytes, module)?)?;
     module.add_function(wrap_pyfunction!(from_path, module)?)?;
     module.add("CantMatchTypeError", _py.get_type::<CantMatchTypeError>())?;
 
     #[cfg(not(PyPy))]
-    pyo3::prepare_freethreaded_python();
+    pyo3::Python::initialize();
 
     Ok(())
 }
