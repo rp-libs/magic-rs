@@ -86,7 +86,7 @@ jobs:
     needs: [ sdist, wheels ]
     environment:
       name: pypi
-      url: https://pypi.org/p/ulid-rs-py
+      url: https://pypi.org/p/magic-rs
     permissions:
       id-token: write
 
